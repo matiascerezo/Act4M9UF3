@@ -19,6 +19,15 @@ public class TimeClient {
     BufferedReader inFromServer;
     Socket socket;
     
+    /**
+     * Creamos el socket con el host y el puerto correspondiente. Creamos el DataOutputStream
+     * y el BufferedReader y mostramos los dialogos para obtener el dia,mes y año que introduce
+     * el usuario. Realizamos el "writeBytes" para escribirlo en forma de String para después
+     * recuperarlo desde el server. Por último cerramos el DataOutputStream, el Socket y el BufferedReader.
+     * @param host
+     * @param port
+     * @throws IOException 
+     */
     public TimeClient(String host, int port) throws IOException {
         socket = new Socket(host, port);
         outToServer = new DataOutputStream(socket.getOutputStream());
@@ -33,6 +42,11 @@ public class TimeClient {
         System.out.println("Mira el server!");
     }
     
+    /**
+     * Creamos un nuevo "TimeClient" con el puerto y el host establecido.
+     * @param args
+     * @throws IOException 
+     */
     public static void main(String[] args) throws IOException {
         new TimeClient(host, port);
     }
