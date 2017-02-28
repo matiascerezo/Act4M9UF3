@@ -1,58 +1,39 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Ex1;
 
-import java.io.PrintStream;
-import java.net.ServerSocket;
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.Socket;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.Scanner;
+import javax.swing.JOptionPane;
 
 /**
  *
- * @author SICMA21
+ * @author Matias
  */
 public class TimeClient {
 
-    private static final String[] DIES_SETMANA = {"Diumenge", "Dilluns", "Dimarts",
-        "Dimecres", "Dijous", "Divendres", "Dissabte"};
+    static String host = "localhost";
+    static int port = 5432;
+    DataOutputStream outToServer;
+    BufferedReader inFromServer;
+    Socket socket;
     
-    private static Socket socket;
-
-    public static void main(String[] args) {
-
-        try {
-            ServerSocket serverSocket = new ServerSocket(10000);
-            while (true) {
-                socket = serverSocket.accept();
-                Scanner in = new Scanner(socket.getInputStream());
-                int[] data = new int[3];
-                boolean correcte = true;
-                for (int i = 0; i < data.length; i++) {
-                    if (in.hasNextInt()) {
-                        data[i] = in.nextInt();
-                    } else {
-                        correcte = false;
-                    }
-                }
-                PrintStream out = new PrintStream(socket.getOutputStream());
-                if (correcte) {
-                    data[1] -= 1;
-                    GregorianCalendar cal = new GregorianCalendar(data[2],
-                            data[1], data[0]);
-                    int dia = cal.get(Calendar.DAY_OF_WEEK) - 1;
-                    System.out.println("Aquest dia era " + DIES_SETMANA[dia] + ".");
-                } else {
-                    System.out.println("Format de les dades incorrecte.");
-                }
-                socket.close();
-            }
-        } catch (Exception ex) {
-            System.out.println("Error en les comunicacions: " + ex);
-        }
+    public TimeClient(String host, int port) throws IOException {
+        socket = new Socket(host, port);
+        outToServer = new DataOutputStream(socket.getOutputStream());
+        inFromServer = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        String dia = JOptionPane.showInputDialog(null, "Dia: ", "Introdueix les dades", 1);
+        String mes = JOptionPane.showInputDialog(null, "Mes: ", "Introdueix les dades", 1);
+        String any = JOptionPane.showInputDialog(null, "Any: ", "Introdueix les dades", 1);
+        outToServer.writeBytes(Integer.parseInt(dia) + " " + Integer.parseInt(mes) + " " + Integer.parseInt(any));
+        inFromServer.close();
+        outToServer.close();
+        socket.close();
+        System.out.println("Mira el server!");
+    }
+    
+    public static void main(String[] args) throws IOException {
+        new TimeClient(host, port);
     }
 }
