@@ -35,7 +35,7 @@ public class TimeClient {
         String dia = JOptionPane.showInputDialog(null, "Dia: ", "Introdueix les dades", 1);
         String mes = JOptionPane.showInputDialog(null, "Mes: ", "Introdueix les dades", 1);
         String any = JOptionPane.showInputDialog(null, "Any: ", "Introdueix les dades", 1);
-        outToServer.writeBytes(Integer.parseInt(dia) + " " + Integer.parseInt(mes) + " " + Integer.parseInt(any));
+        outToServer.writeBytes(dia + " " + mes + " " + any);
         inFromServer.close();
         outToServer.close();
         socket.close();
